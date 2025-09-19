@@ -43,3 +43,4 @@ results_*.csv
 .DS_Store
 Thumbs.db
 MISP/
+data/
