@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 # Uso:
-#  scripts/eval_folder.sh <dir_dataset> greedy
-#  scripts/eval_folder.sh <dir_dataset> prob --alpha 0.3 [--repeats 1]
+#   scripts/eval_folder.sh <bin_greedy> <bin_prob> <root_dataset_dir> <reps> <alpha> [--extra "..."]
+# Ejemplo:
+#   scripts/eval_folder.sh ./build/Greedy ./build/Greedy-probabilista data/dataset_grafos_no_dirigidos 30 0.1
 #
+# Salida:
+#   results_greedy_all.csv, results_prob_aXX_all.csv en el directorio actual.
+#
+
 # Produce CSV con columnas:
 # n,p,algo,alpha,repeats,files,mean_value,mean_time
 
