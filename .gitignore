@@ -1,0 +1,44 @@
+# Compilados C/C++
+build/
+*.o
+*.obj
+*.out
+*.exe
+*.a
+*.so
+*.dll
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Python (por si usas scripts)
+__pycache__/
+*.pyc
+*.pyo
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+
+# Datasets grandes
+data/
+*.zip
+*.graph
+
+# Resultados experimentales
+results_*.csv
+*.dat
+
+# Sistema
+.DS_Store
+Thumbs.db
