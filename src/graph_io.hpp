@@ -1,16 +1,28 @@
-// ~/mis-2025/src/graph_io.hpp
 #pragma once
 #include <vector>
 #include <string>
 #include <fstream>
 #include <stdexcept>
 
+/**
+ * Representación básica de grafo no dirigido con listas de adyacencia.
+ * - n: número de nodos (0..n-1)
+ * - m: número de aristas (se incrementa por cada par u v leído)
+ * - adj[u]: vecinos de u
+ */
 struct Graph {
     int n = 0;
     long long m = 0;
     std::vector<std::vector<int>> adj; // 0-based
 };
 
+/**
+ * Carga un grafo desde archivo .graph con el formato:
+ *  1) Primera línea: n
+ *  2) Resto: pares "u v" (0-based), una arista por línea
+ * Ignora lazos (u==v) y valida rangos de índices.
+ * Lanza std::runtime_error si hay problemas de lectura.
+ */
 inline Graph load_graph(const std::string& path) {
     std::ifstream in(path);
     if (!in) throw std::runtime_error("No se pudo abrir: " + path);

@@ -1,7 +1,10 @@
-// ~/mis-2025/src/utils.hpp
 #pragma once
 #include <chrono>
 
+/**
+ * Cronómetro simple: segundos transcurridos desde la primera invocación.
+ * Útil para medir tiempo de corrida sin dependencias externas.
+ */
 inline double now_seconds() {
     using clock = std::chrono::high_resolution_clock;
     static const auto t0 = clock::now();

@@ -138,25 +138,7 @@ Los CSV contienen resultados promedio por configuración `(n,p)`.
 
 ---
 
-## 6) Generación de informe (opcional)
-
-En el repo se incluye un archivo LaTeX (`MIS_Entrega1_FINAL.tex`).  
-Para compilar a PDF:
-
-```bash
-sudo apt install texlive-latex-base texlive-latex-extra texlive-lang-spanish
-pdflatex MIS_Entrega1_FINAL.tex
-```
-
-Esto genera `MIS_Entrega1_FINAL.pdf` con:
-- Explicación de heurísticas.  
-- Pseudocódigo.  
-- Tablas de resultados promedio.  
-- Análisis.
-
----
-
-## 7) Estructura del proyecto
+## 6) Estructura del proyecto
 
 ```
 mis-2025/
@@ -165,9 +147,8 @@ mis-2025/
 ├─ scripts/             # bash scripts
 │  ├─ get_dataset.sh
 │  ├─ run_one.sh
-│  ├─ run_benchmark.sh
-│  ├─ eval_folder.sh
-│  └─ smoke_test.sh
+│  ├─ run_benchmark.sh  
+│  └─ eval_folder.sh
 ├─ build/               # binarios compilados
 ├─ data/                # dataset descargado aquí
 │  └─ dataset_grafos_no_dirigidos/
@@ -178,42 +159,10 @@ mis-2025/
 
 ---
 
-## 8) Problemas frecuentes (FAQ)
+## 7) Problemas frecuentes (FAQ)
 
 - **`make: g++: command not found`** → Instala dependencias: `sudo apt -y install build-essential`.
 - **Permisos en scripts** → `chmod +x scripts/*.sh`.
 - **Ruta dataset incorrecta** → Verifica que los `.graph` estén bajo `data/dataset_grafos_no_dirigidos/...`.
 - **Lento en WSL** → Evita trabajar en rutas montadas de Windows (`/mnt/c/...`). Usa `/home/<usuario>/`.
 
----
-
-## 9) Licencia
-MIT (opcional). Ver `LICENSE` si se incluye.
-
----
-
-## 10) Verificación rápida (Smoke Test)
-
-El script `scripts/smoke_test.sh` valida que todo funcione correctamente después de clonar:
-
-1. Instala dependencias mínimas (`build-essential`, `curl`, `unzip`).
-2. Descarga el dataset si no existe en `data/`.
-3. Compila los binarios con `make`.
-4. Ejecuta `Greedy` y `Greedy-probabilista` sobre una instancia pequeña.
-
-### Uso:
-```bash
-scripts/smoke_test.sh
-```
-
-Salida esperada (ejemplo):
-```
-[SMOKE] Instalando dependencias...
-[SMOKE] Descargando dataset...
-[SMOKE] Compilando...
-[SMOKE] Ejecutando Greedy...
-99 0.000354
-[SMOKE] Ejecutando Greedy-probabilista...
-104 0.000527
-[SMOKE] Todo OK ✅
-```

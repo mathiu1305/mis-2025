@@ -1,4 +1,3 @@
-// ~/mis-2025/src/greedy_rand.cpp
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -7,6 +6,17 @@
 #include "graph_io.hpp"
 #include "utils.hpp"
 
+/**
+ * Heurística greedy aleatorizada para MIS (RCL-α):
+ *  - Calcula umbral = d_min + α (d_max - d_min).
+ *  - RCL = {u vivos con grado[u] <= umbral}.
+ *  - Elige u aleatorio en RCL, lo agrega a la solución y elimina u y vecinos.
+ * Parámetros:
+ *  -i / --input <instancia.graph>
+ *  --alpha <0..1>     (default 0.3)
+ *  --seed  <entero>   (default 12345)
+ * Salida (stdout): "<valor> <tiempo>"
+ */
 int main(int argc, char** argv) {
     std::string in_path; double alpha = 0.3; unsigned seed = 12345;
     for (int i = 1; i < argc; ++i) {
@@ -32,6 +42,7 @@ int main(int argc, char** argv) {
 
     double t0 = now_seconds();
     while (alive_count > 0) {
+        // Rango de grados en los nodos vivos
         int dmin = INT_MAX, dmax = -1;
         for (int u = 0; u < n; ++u) if (alive[u]) {
             if (deg[u] < dmin) dmin = deg[u];
@@ -39,6 +50,7 @@ int main(int argc, char** argv) {
         }
         if (dmin == INT_MAX) break;
 
+        // Umbral para construir RCL
         const double thr = dmin + alpha * (double)(dmax - dmin);
 
         std::vector<int> RCL;
@@ -46,17 +58,22 @@ int main(int argc, char** argv) {
         for (int u = 0; u < n; ++u) if (alive[u]) {
             if ((double)deg[u] <= thr) RCL.push_back(u);
         }
-        if (RCL.empty()) { for (int u = 0; u < n; ++u) if (alive[u]) { RCL.push_back(u); break; } }
+        // Salvaguarda: si RCL queda vacía, agregamos un vivo cualquiera
+        if (RCL.empty()) {
+            for (int u = 0; u < n; ++u) if (alive[u]) { RCL.push_back(u); break; }
+        }
 
+        // Elección aleatoria dentro de RCL
         std::uniform_int_distribution<int> dist(0, (int)RCL.size() - 1);
-        int best = RCL[dist(rng)];
+        int chosen = RCL[dist(rng)];
 
         ++solution_size;
 
+        // Eliminación del elegido y de sus vecinos; actualización de grados
         std::vector<int> to_remove;
-        to_remove.reserve(1 + G.adj[best].size());
-        to_remove.push_back(best);
-        for (int v : G.adj[best]) if (alive[v]) to_remove.push_back(v);
+        to_remove.reserve(1 + G.adj[chosen].size());
+        to_remove.push_back(chosen);
+        for (int v : G.adj[chosen]) if (alive[v]) to_remove.push_back(v);
 
         for (int r : to_remove) if (alive[r]) {
             alive[r] = 0; --alive_count;
@@ -65,6 +82,7 @@ int main(int argc, char** argv) {
     }
     double elapsed = now_seconds() - t0;
 
-    std::cout << solution_size << " " << std::fixed << std::setprecision(6) << elapsed << "\n";
+    std::cout << solution_size << " "
+              << std::fixed << std::setprecision(6) << elapsed << "\n";
     return 0;
 }

@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
+# Ejecuta una instancia con el algoritmo indicado y muestra valor + tiempo
+# Uso:
+#   scripts/run_one.sh <binario> <instancia.graph> [parametros_extra]
+
 set -euo pipefail
-BIN="$1"     # ej: ./build/Greedy o ./build/Greedy-probabilista
-INS="$2"     # ruta a instancia
-shift 2
-OUT=$("$BIN" -i "$INS" "$@")
-# El bin ya imprime: "<valor> <tiempo>"
-echo "$OUT"
+
+BIN="$1"; shift
+FILE="$1"; shift || true
+
+if [[ ! -x "$BIN" ]]; then
+  echo "No existe ejecutable: $BIN" >&2
+  exit 1
+fi
+if [[ ! -f "$FILE" ]]; then
+  echo "No existe archivo de entrada: $FILE" >&2
+  exit 1
+fi
+
+"$BIN" -i "$FILE" "$@"

@@ -1,4 +1,3 @@
-// ~/mis-2025/src/greedy.cpp
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -6,6 +5,13 @@
 #include "graph_io.hpp"
 #include "utils.hpp"
 
+/**
+ * Heurística greedy determinista para MIS:
+ *  - Mientras queden nodos "vivos", elige el de menor grado actual,
+ *    lo agrega a la solución y elimina ese nodo y sus vecinos.
+ * Entrada:  -i <instancia.graph>
+ * Salida (stdout): "<valor> <tiempo>"
+ */
 int main(int argc, char** argv) {
     std::string in_path;
     for (int i = 1; i < argc; ++i) {
@@ -26,6 +32,7 @@ int main(int argc, char** argv) {
 
     double t0 = now_seconds();
     while (alive_count > 0) {
+        // Selección: vértice con menor grado actual
         int best = -1, best_deg = INT_MAX;
         for (int u = 0; u < n; ++u) if (alive[u]) {
             if (deg[u] < best_deg) { best_deg = deg[u]; best = u; }
@@ -34,6 +41,7 @@ int main(int argc, char** argv) {
 
         ++solution_size;
 
+        // Eliminar elegido y sus vecinos; actualizar grados
         std::vector<int> to_remove;
         to_remove.reserve(1 + G.adj[best].size());
         to_remove.push_back(best);
@@ -46,6 +54,7 @@ int main(int argc, char** argv) {
     }
     double elapsed = now_seconds() - t0;
 
-    std::cout << solution_size << " " << std::fixed << std::setprecision(6) << elapsed << "\n";
+    std::cout << solution_size << " "
+              << std::fixed << std::setprecision(6) << elapsed << "\n";
     return 0;
 }

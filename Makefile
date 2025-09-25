@@ -1,17 +1,22 @@
+# Makefile para compilar los binarios Greedy y Greedy-probabilista
+# Uso:
+#   make        → compila los ejecutables en build/
+#   make clean  → elimina binarios
+
 CXX = g++
-CXXFLAGS = -O3 -std=c++17 -Wall -Wextra
-BIN = build
+CXXFLAGS = -std=c++17 -O2 -Wall
 SRC = src
+BUILD = build
 
-all: $(BIN)/Greedy $(BIN)/Greedy-probabilista
+all: $(BUILD)/Greedy $(BUILD)/Greedy-probabilista
 
-$(BIN)/Greedy: $(SRC)/greedy.cpp $(SRC)/utils.hpp
-	mkdir -p $(BIN)
-	$(CXX) $(CXXFLAGS) $(SRC)/greedy.cpp -o $@
+$(BUILD)/Greedy: $(SRC)/greedy.cpp $(SRC)/graph_io.hpp $(SRC)/utils.hpp
+	mkdir -p $(BUILD)
+	$(CXX) $(CXXFLAGS) -o $@ $(SRC)/greedy.cpp
 
-$(BIN)/Greedy-probabilista: $(SRC)/greedy_rand.cpp $(SRC)/utils.hpp
-	mkdir -p $(BIN)
-	$(CXX) $(CXXFLAGS) $(SRC)/greedy_rand.cpp -o $@
+$(BUILD)/Greedy-probabilista: $(SRC)/greedy_rand.cpp $(SRC)/graph_io.hpp $(SRC)/utils.hpp
+	mkdir -p $(BUILD)
+	$(CXX) $(CXXFLAGS) -o $@ $(SRC)/greedy_rand.cpp
 
 clean:
-	rm -rf $(BIN)
+	rm -rf $(BUILD)

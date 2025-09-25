@@ -1,38 +1,33 @@
 #!/usr/bin/env bash
-set -euo pipefail
-BIN="$1"      # ./build/Greedy o ./build/Greedy-probabilista
-INS="$2"      # ruta a instancia
-RUNS="${3:-30}"  # por defecto 30
-shift 3 || true
+# Corre varias veces una misma instancia y calcula promedio de valor y tiempo
+# Uso:
+#   scripts/run_benchmark.sh <binario> <instancia.graph> <reps> [--alpha A]
 
-sumV=0
-sumT=0
-for r in $(seq 1 "$RUNS"); do
-  # Para el probabilista conviene variar semilla:
-  if [[ "$BIN" == *Greedy-probabilista ]]; then
-    OUT=$(scripts/run_one.sh "$BIN" "$INS" "$@" --seed $RANDOM)
-  else
-    OUT=$(scripts/run_one.sh "$BIN" "$INS" "$@")
-  fi
-  V=$(echo "$OUT" | awk '{print $1}')
-  T=$(echo "$OUT" | awk '{print $2}')
-  # acumula en bash utilizando printf para evitar problemas de bc
-  sumV=$(python3 - <<PY
-print(float("$sumV")+float("$V"))
-PY
-)
-  sumT=$(python3 - <<PY
-print(float("$sumT")+float("$T"))
-PY
-)
+set -euo pipefail
+
+BIN="$1"; shift
+FILE="$1"; shift
+REPS="$1"; shift
+
+if [[ ! -x "$BIN" ]]; then
+  echo "No existe ejecutable: $BIN" >&2
+  exit 1
+fi
+if [[ ! -f "$FILE" ]]; then
+  echo "No existe archivo de entrada: $FILE" >&2
+  exit 1
+fi
+
+SUMV=0
+SUMT=0
+for ((i=1;i<=REPS;i++)); do
+  OUT=$("$BIN" -i "$FILE" "$@" --seed $i)
+  V=$(awk '{print $1}' <<<"$OUT")
+  T=$(awk '{print $2}' <<<"$OUT")
+  SUMV=$(awk -v a="$SUMV" -v b="$V" 'BEGIN{print a+b}')
+  SUMT=$(awk -v a="$SUMT" -v b="$T" 'BEGIN{print a+b}')
 done
 
-avgV=$(python3 - <<PY
-print(float("$sumV")/float("$RUNS"))
-PY
-)
-avgT=$(python3 - <<PY
-print(float("$sumT")/float("$RUNS"))
-PY
-)
-echo "$avgV $avgT"
+MEANV=$(awk -v s="$SUMV" -v n="$REPS" 'BEGIN{print s/n}')
+MEANT=$(awk -v s="$SUMT" -v n="$REPS" 'BEGIN{print s/n}')
+echo "$MEANV $MEANT"
