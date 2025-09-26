@@ -31,7 +31,7 @@ git clone https://github.com/mathiu1305/mis-2025.git
 cd mis-2025
 ```
 
-⚠️ Importante en WSL: trabaja siempre dentro de `/home/<usuario>/...` (Linux).  
+trabaja siempre dentro de `/home/<usuario>/...` (Linux).  
 Evita clonar/compilar desde rutas de Windows (`\\wsl.localhost\...`) por temas de permisos y rendimiento.
 
 ---
