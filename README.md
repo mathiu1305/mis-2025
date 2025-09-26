@@ -1,6 +1,6 @@
 # MIS 2025 — Heurísticas Greedy para Maximum Independent Set (MIS)
 
-**Autores:** Matias Gayoso, Contanza Obreque  
+**Autores:** Matias Gayoso, Constanza Obreque  
 **Entorno objetivo:** Windows + WSL2 (Ubuntu) + VSCode  
 **Lenguaje:** C++17
 
@@ -13,9 +13,6 @@ En WSL / Ubuntu, instala las dependencias mínimas:
 ```bash
 sudo apt update
 sudo apt -y install build-essential curl unzip
-```
-
-> Opcional: para análisis posterior de CSVs puedes usar `python3-pandas` o R.
 
 ---
 
@@ -33,7 +30,7 @@ git clone https://github.com/mathiu1305/mis-2025.git
 cd mis-2025
 ```
 
-⚠️ Importante en WSL: trabaja siempre dentro de `/home/<usuario>/...` (Linux).  
+Importante en WSL: trabaja siempre dentro de `/home/<usuario>/...` (Linux).  
 Evita clonar/compilar desde rutas de Windows (`\\wsl.localhost\...`) por temas de permisos y rendimiento.
 
 ---
@@ -116,25 +113,40 @@ Salida típica:
 
 ## 5) Scripts de evaluación
 
-### Una sola corrida
+### `scripts/get_dataset.sh`
+Descarga y descomprime automáticamente el dataset en la carpeta `data/`.  
+Útil para preparar el entorno con un solo comando.
+
+### `scripts/run_one.sh`
+Ejecuta un algoritmo (Greedy o Greedy-probabilista) sobre **una sola instancia**.  
+Imprime el resultado de esa corrida (valor y tiempo).
+
+Ejemplo:
 ```bash
 scripts/run_one.sh ./build/Greedy data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.05_1.graph
 ```
 
-### N corridas y promedio
+### `scripts/run_benchmark.sh`
+Ejecuta un algoritmo sobre la **misma instancia** varias veces (ej: 30 repeticiones) y devuelve el promedio de tamaño de solución y tiempo.
+
+Ejemplo:
 ```bash
 scripts/run_benchmark.sh ./build/Greedy-probabilista data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.05_1.graph 30 --alpha 0.1
 # => "<media_valor> <media_tiempo>"
 ```
 
-### Evaluar carpetas completas y exportar CSVs
+### `scripts/eval_folder.sh`
+Ejecuta ambos algoritmos (`Greedy` y `Greedy-probabilista`) en todas las instancias de un directorio.  
+Genera automáticamente dos archivos CSV:
+- `results_greedy_all.csv`
+- `results_prob_a10_all.csv`
+
+Cada línea contiene los resultados promedio por configuración `(n,p)`.
+
+Ejemplo:
 ```bash
 scripts/eval_folder.sh ./build/Greedy ./build/Greedy-probabilista data/dataset_grafos_no_dirigidos 30 0.1
-# → results_greedy_all.csv
-# → results_prob_a10_all.csv
 ```
-
-Los CSV contienen resultados promedio por configuración `(n,p)`.
 
 ---
 
@@ -144,11 +156,11 @@ Los CSV contienen resultados promedio por configuración `(n,p)`.
 mis-2025/
 ├─ src/                 # código fuente en C++
 ├─ include/             # headers extra
-├─ scripts/             # bash scripts
-│  ├─ get_dataset.sh
-│  ├─ run_one.sh
-│  ├─ run_benchmark.sh  
-│  └─ eval_folder.sh
+├─ scripts/             # scripts auxiliares
+│  ├─ get_dataset.sh       # descarga dataset
+│  ├─ run_one.sh           # ejecuta una instancia
+│  ├─ run_benchmark.sh     # ejecuta N veces una instancia y promedia
+│  └─ eval_folder.sh       # ejecuta sobre carpetas completas y genera CSVs
 ├─ build/               # binarios compilados
 ├─ data/                # dataset descargado aquí
 │  └─ dataset_grafos_no_dirigidos/
@@ -165,4 +177,3 @@ mis-2025/
 - **Permisos en scripts** → `chmod +x scripts/*.sh`.
 - **Ruta dataset incorrecta** → Verifica que los `.graph` estén bajo `data/dataset_grafos_no_dirigidos/...`.
 - **Lento en WSL** → Evita trabajar en rutas montadas de Windows (`/mnt/c/...`). Usa `/home/<usuario>/`.
-
