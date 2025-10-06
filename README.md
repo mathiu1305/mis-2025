@@ -178,3 +178,153 @@ mis-2025/
 - **Permisos en scripts** → `chmod +x scripts/*.sh`.
 - **Ruta dataset incorrecta** → Verifica que los `.graph` estén bajo `data/dataset_grafos_no_dirigidos/...`.
 - **Lento en WSL** → Evita trabajar en rutas montadas de Windows (`/mnt/c/...`). Usa `/home/<usuario>/`.
+
+
+======================================================================
+# 🧩 ENTREGA 2 — Metaheurística de Trayectoria: Simulated Annealing (SA)
+======================================================================
+
+**Autores:** Matías Gayoso, Constanza Obreque  
+**Entorno:** Ubuntu (WSL2) + VSCode  
+**Lenguaje:** C++17
+
+---
+
+## 8) Descripción general
+
+Esta entrega amplía el proyecto anterior incorporando la metaheurística **Simulated Annealing (SA)** para el problema **Maximum Independent Set (MIS)**.  
+El algoritmo mantiene la estructura modular del proyecto, permite configurar parámetros desde consola y respeta el criterio *any-time* (imprimir mejoras durante la ejecución).
+
+---
+
+## 9) Compilación
+
+El ejecutable se genera junto con los demás al ejecutar:
+
+```bash
+make
+```
+
+o, para recompilar desde cero:
+
+```bash
+make clean && make
+```
+
+Esto crea los binarios:
+```
+build/Greedy
+build/Greedy-probabilista
+build/SA
+```
+
+---
+
+## 10) Ejecución básica
+
+El programa se ejecuta mediante:
+
+```bash
+./build/SA -i <instancia.graph> -t <tiempo_segundos> [--seed S] [--T0 v] [--alpha v] [--iters_per_T N] [--check]
+```
+
+### Ejemplo:
+```bash
+./build/SA -i data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.05_1.graph -t 5
+```
+
+Cada mejora imprime:
+```
+<mejor_valor> <tiempo_desde_inicio>
+```
+y repite la última línea al finalizar el tiempo máximo (**criterio any-time**).
+
+---
+
+## 11) Parámetros principales
+
+| Parámetro | Valor por defecto | Descripción |
+|:--|:--:|:--|
+| `T0` | **1.0** | Temperatura inicial |
+| `alpha` | **0.999** | Factor de enfriamiento |
+| `iters_per_T` | `max(1000, n)` | Iteraciones por temperatura |
+| `seed` | reloj del sistema | Semilla aleatoria |
+| `tmax` | obligatorio (`-t`) | Tiempo máximo (segundos) |
+
+> Recomendado: para grafos grandes (≈ 3000 vértices) usar `T0 = 2.0` y `alpha = 0.999`.
+
+---
+
+## 12) Ejemplos de uso
+
+```bash
+# 5 s con parámetros por defecto
+./build/SA -i data/.../erdos_n1000_p0c0.05_1.graph -t 5
+
+# Corrida reproducible
+./build/SA -i data/.../erdos_n1000_p0c0.05_1.graph -t 5 --seed 1
+
+# Verificación de independencia y maximalidad
+./build/SA -i /tmp/k3.graph -t 1 --check
+```
+
+Error esperado si el archivo no existe:
+```
+ERROR: Cannot open file: data/no_existe.graph
+```
+
+---
+
+## 13) Scripts auxiliares
+
+Dentro del directorio `scripts/` se incluyen herramientas para automatizar experimentos:
+
+| Script | Descripción |
+|:--|:--|
+| **`sa_calibrate.sh`** | Ejecuta múltiples configuraciones de parámetros (`T0`, `alpha`, `seed`) sobre distintas instancias para calibrar el SA. Genera el archivo `results_sa_grid.csv`. |
+| **`aggregate_sa_results.py`** | Resume los resultados de calibración (`results_sa_grid.csv`) calculando medias, desviaciones y tiempos promedio. Produce `results_sa_grid_agg.csv`. |
+| **`instancias_muestra.txt`** | Lista de instancias pequeñas utilizadas para calibración rápida. |
+
+### Ejemplo de uso:
+```bash
+bash scripts/sa_calibrate.sh ./build/SA 5 scripts/instancias_muestra.txt 1 5   --T0 "0.5 1.0 2.0"   --alpha "0.995 0.997 0.999"
+
+python3 scripts/aggregate_sa_results.py results_sa_grid.csv
+```
+
+---
+
+## 14) Estructura del proyecto
+
+```
+mis-2025/
+├─ src/
+│  ├─ greedy.cpp
+│  ├─ greedy_rand.cpp
+│  ├─ SA.cpp
+│  ├─ graph_io.hpp
+│  └─ utils.hpp
+├─ scripts/
+│  ├─ sa_calibrate.sh
+│  ├─ aggregate_sa_results.py
+│  └─ instancias_muestra.txt
+├─ data/
+│  └─ dataset_grafos_no_dirigidos/
+├─ build/
+│  ├─ Greedy
+│  ├─ Greedy-probabilista
+│  └─ SA
+├─ Makefile
+└─ README.md
+```
+
+---
+
+## 15) Observaciones
+
+- El algoritmo **SA** es *any-time*: entrega la mejor solución parcial incluso si el tiempo se agota.  
+- Todos los parámetros son configurables desde la línea de comandos.  
+- Soporta verificación de independencia y maximalidad con `--check`.  
+- Compatible con Linux, WSL2 y compiladores g++ 17+.  
+
+---

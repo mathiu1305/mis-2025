@@ -1,4 +1,6 @@
-# Compilados C/C++
+# =============================
+# Compilados y binarios C/C++
+# =============================
 build/
 *.o
 *.obj
@@ -8,16 +10,22 @@ build/
 *.so
 *.dll
 
-# VSCode
+# =============================
+# VSCode / Entorno
+# =============================
 .vscode/
 *.code-workspace
 
-# Python (por si usas scripts)
+# =============================
+# Python (scripts de análisis)
+# =============================
 __pycache__/
 *.pyc
 *.pyo
 
-# LaTeX
+# =============================
+# Archivos temporales de LaTeX
+# =============================
 *.aux
 *.log
 *.out
@@ -30,18 +38,27 @@ __pycache__/
 *.fdb_latexmk
 *.fls
 
-# Datasets grandes
+# =============================
+# Datasets y archivos grandes
+# =============================
 data/
 *.zip
 *.graph
-
-# Resultados experimentales
-results_*.csv
 *.dat
 
-# Sistema
+# =============================
+# Resultados experimentales
+# =============================
+results_*.csv
+*.csv
+
+# =============================
+# Archivos del sistema
+# =============================
 .DS_Store
 Thumbs.db
+
+# =============================
+# Carpetas personales / misceláneas
+# =============================
 MISP/
-data/
-data/

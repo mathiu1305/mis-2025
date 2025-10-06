@@ -1,0 +1,10 @@
+# =============================================================================
+# Archivo : instancias_muestra.txt
+# Descripción:
+#   Rutas de instancias representativas para calibración y pruebas de SA.
+#   Cada línea apunta a un grafo Erdos–Rényi con distinto tamaño n.
+#   (Asegúrate de que existan en tu árbol data/.)
+# =============================================================================
+data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.05_1.graph
+data/dataset_grafos_no_dirigidos/new_2000_dataset/erdos_n2000_p0c0.05_1.graph
+data/dataset_grafos_no_dirigidos/new_3000_dataset/erdos_n3000_p0c0.05_1.graph
