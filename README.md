@@ -181,7 +181,7 @@ mis-2025/
 
 
 ======================================================================
-# 🧩 ENTREGA 2 — Metaheurística de Trayectoria: Simulated Annealing (SA)
+# ENTREGA 2 — Metaheurística de Trayectoria: Simulated Annealing (SA)
 ======================================================================
 
 **Autores:** Matías Gayoso, Constanza Obreque  
