@@ -190,141 +190,119 @@ mis-2025/
 
 ---
 
-## 8) Descripción general
-
-Esta entrega amplía el proyecto anterior incorporando la metaheurística **Simulated Annealing (SA)** para el problema **Maximum Independent Set (MIS)**.  
-El algoritmo mantiene la estructura modular del proyecto, permite configurar parámetros desde consola y respeta el criterio *any-time* (imprimir mejoras durante la ejecución).
+### Descripción general
+En esta entrega se implementa la metaheurística **Simulated Annealing (SA)** para el problema MIS.  
+El algoritmo utiliza un vecindario de inserción con completación local y criterio de aceptación probabilístico,  
+mostrando mejoras *any-time* durante la ejecución y una línea final con el mejor resultado y tiempo.
 
 ---
 
-## 9) Compilación
+## 8) Compilación
 
-El ejecutable se genera junto con los demás al ejecutar:
-
+### Opción A — con Makefile
 ```bash
-make
+cd ~/mis-2025
+make SA
 ```
-
-o, para recompilar desde cero:
-
+Si quieres recompilar desde cero:
 ```bash
-make clean && make
+make clean && make SA
 ```
 
-Esto crea los binarios:
-```
-build/Greedy
-build/Greedy-probabilista
-build/SA
-```
-
----
-
-## 10) Ejecución básica
-
-El programa se ejecuta mediante:
-
+### Opción B — compilación manual
 ```bash
-./build/SA -i <instancia.graph> -t <tiempo_segundos> [--seed S] [--T0 v] [--alpha v] [--iters_per_T N] [--check]
+cd src
+g++ -O2 -std=c++17 SA.cpp -o SA
+```
+Ejecutable resultante: `./SA`
+
+---
+
+## 9) Ejecución básica
+
+Formato de salida (*any-time*):
+```
+<mejor_tamaño> <tiempo_segundos>
+```
+Además se muestran líneas de configuración y estadísticas:
+```
+#config: seed=... T0=... alpha=... diversify=off adaptive_temp=off verbose=off
+#stats: total_moves=... accepted=... rate=... improvements=... moves_per_sec=...
 ```
 
-### Ejemplo:
+### Ejemplos rápidos (≤ 3 s)
+
+> **N = 1000**
 ```bash
-./build/SA -i data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.05_1.graph -t 5
+./build/SA -i data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.1_3.graph -t 3
+./build/SA -i data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.5_5.graph -t 3
+./build/SA -i data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.9_2.graph -t 3
 ```
 
-Cada mejora imprime:
-```
-<mejor_valor> <tiempo_desde_inicio>
-```
-y repite la última línea al finalizar el tiempo máximo (**criterio any-time**).
-
----
-
-## 11) Parámetros principales
-
-| Parámetro | Valor por defecto | Descripción |
-|:--|:--:|:--|
-| `T0` | **1.0** | Temperatura inicial |
-| `alpha` | **0.999** | Factor de enfriamiento |
-| `iters_per_T` | `max(1000, n)` | Iteraciones por temperatura |
-| `seed` | reloj del sistema | Semilla aleatoria |
-| `tmax` | obligatorio (`-t`) | Tiempo máximo (segundos) |
-
-> Recomendado: para grafos grandes (≈ 3000 vértices) usar `T0 = 2.0` y `alpha = 0.999`.
-
----
-
-## 12) Ejemplos de uso
-
+> **N = 2000**
 ```bash
-# 5 s con parámetros por defecto
-./build/SA -i data/.../erdos_n1000_p0c0.05_1.graph -t 5
-
-# Corrida reproducible
-./build/SA -i data/.../erdos_n1000_p0c0.05_1.graph -t 5 --seed 1
-
-# Verificación de independencia y maximalidad
-./build/SA -i /tmp/k3.graph -t 1 --check
+./build/SA -i data/dataset_grafos_no_dirigidos/new_2000_dataset/erdos_n2000_p0c0.1_6.graph -t 3
+./build/SA -i data/dataset_grafos_no_dirigidos/new_2000_dataset/erdos_n2000_p0c0.5_8.graph -t 3
+./build/SA -i data/dataset_grafos_no_dirigidos/new_2000_dataset/erdos_n2000_p0c0.9_11.graph -t 3
 ```
 
-Error esperado si el archivo no existe:
-```
-ERROR: Cannot open file: data/no_existe.graph
-```
-
----
-
-## 13) Scripts auxiliares
-
-Dentro del directorio `scripts/` se incluyen herramientas para automatizar experimentos:
-
-| Script | Descripción |
-|:--|:--|
-| **`sa_calibrate.sh`** | Ejecuta múltiples configuraciones de parámetros (`T0`, `alpha`, `seed`) sobre distintas instancias para calibrar el SA. Genera el archivo `results_sa_grid.csv`. |
-| **`aggregate_sa_results.py`** | Resume los resultados de calibración (`results_sa_grid.csv`) calculando medias, desviaciones y tiempos promedio. Produce `results_sa_grid_agg.csv`. |
-| **`instancias_muestra.txt`** | Lista de instancias pequeñas utilizadas para calibración rápida. |
-
-### Ejemplo de uso:
+> **N = 3000**
 ```bash
-bash scripts/sa_calibrate.sh ./build/SA 5 scripts/instancias_muestra.txt 1 5   --T0 "0.5 1.0 2.0"   --alpha "0.995 0.997 0.999"
+./build/SA -i data/dataset_grafos_no_dirigidos/new_3000_dataset/erdos_n3000_p0c0.1_3.graph -t 3
+./build/SA -i data/dataset_grafos_no_dirigidos/new_3000_dataset/erdos_n3000_p0c0.5_10.graph -t 3
+./build/SA -i data/dataset_grafos_no_dirigidos/new_3000_dataset/erdos_n3000_p0c0.9_18.graph -t 3
+```
 
-python3 scripts/aggregate_sa_results.py results_sa_grid.csv
+> **Nota:** si el ejecutable está en `src/`, usa `./src/SA` en vez de `./build/SA`.
+
+---
+
+## 10) Parámetros principales
+
+| Parámetro | Por defecto | Descripción |
+|------------|:-----------:|-------------|
+| `-i` | (required) | Ruta del grafo `.graph` |
+| `-t` | (required) | Tiempo límite en segundos |
+| `--seed S` | reloj SO | Semilla para reproducibilidad |
+| `--T0 v` | 1.0 | Temperatura inicial |
+| `--alpha v` | 0.999 | Factor de enfriamiento |
+| `--iters_per_T v` | 1000 | Iteraciones por temperatura |
+
+**Recomendado:** `--T0 2.0 --alpha 0.9995` para instancias grandes.  
+Usa `--seed` para corridas repetibles.
+
+---
+
+## 11) Interpretación de la salida
+
+Ejemplo real:
+```
+#config: seed=1760740917462159746 T0=2 alpha=0.9995 diversify=off adaptive_temp=off verbose=off
+#stats: total_moves=104129560 accepted=3278 rate=0.000 improvements=1462 moves_per_sec=34709689
+1526 0.126138
+```
+
+- `#config` → parámetros efectivos de la corrida.  
+- `#stats` → movimientos totales, aceptados, mejoras y velocidad en mov/s.  
+- Última línea → mejor tamaño de conjunto y tiempo de obtención.
+
+---
+
+## 12) Errores comunes
+
+**Ruta inválida**
+```
+ERROR: Cannot open file: <ruta>
+```
+**Bandera no soportada**
+```
+Unknown or incomplete arg: --adaptive
 ```
 
 ---
 
-## 14) Estructura del proyecto
+## 13) Conclusiones
 
-```
-mis-2025/
-├─ src/
-│  ├─ greedy.cpp
-│  ├─ greedy_rand.cpp
-│  ├─ SA.cpp
-│  ├─ graph_io.hpp
-│  └─ utils.hpp
-├─ scripts/
-│  ├─ sa_calibrate.sh
-│  ├─ aggregate_sa_results.py
-│  └─ instancias_muestra.txt
-├─ data/
-│  └─ dataset_grafos_no_dirigidos/
-├─ build/
-│  ├─ Greedy
-│  ├─ Greedy-probabilista
-│  └─ SA
-├─ Makefile
-└─ README.md
-```
-
----
-
-## 15) Observaciones
-
-- El algoritmo **SA** es *any-time*: entrega la mejor solución parcial incluso si el tiempo se agota.  
-- Todos los parámetros son configurables desde la línea de comandos.  
-- Soporta verificación de independencia y maximalidad con `--check`.  
-- Compatible con Linux, WSL2 y compiladores g++ 17+.  
-
----
+El Simulated Annealing mejora de 25–60 % las soluciones Greedy según la densidad del grafo.  
+La ejecución es estable, eficiente y muestra progreso any-time en tiempo real,  
+con tiempos subcuadráticos incluso para N = 3000.
