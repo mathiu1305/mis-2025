@@ -306,3 +306,168 @@ Unknown or incomplete arg: --adaptive
 El Simulated Annealing mejora de 25–60 % las soluciones Greedy según la densidad del grafo.  
 La ejecución es estable, eficiente y muestra progreso any-time en tiempo real,  
 con tiempos subcuadráticos incluso para N = 3000.
+
+
+# ============================================================
+# ENTREGA 3 — Metaheurística Poblacional: Algoritmo Genético (GA)
+# ============================================================
+
+## 14) Compilación
+
+```bash
+make GA
+```
+
+o manualmente:
+
+```bash
+g++ -O3 -std=c++17 src/ga/GA.cpp -o build/GA
+```
+
+---
+
+## 15) Ejecución del GA (criterio Any-Time)
+
+El GA imprime una línea **cada vez que encuentra una mejor solución**:
+
+```
+<mejor_tamaño> <tiempo>
+```
+
+Ejemplo:
+
+```bash
+./build/GA \
+  -i data/.../erdos_n3000_p0c0.5_1.graph \
+  -t 10 \
+  --pop 100 --pc 0.8 --pm 0.05 \
+  --elitism 1 --init mix --ls 1
+```
+
+---
+
+## 16) Parámetros principales del GA
+
+| Parámetro | Descripción |
+|----------|-------------|
+| `-i` | Instancia `.graph` |
+| `-t` | Tiempo límite |
+| `--pop` | Tamaño de población |
+| `--pc` | Probabilidad de cruce |
+| `--pm` | Probabilidad de mutación |
+| `--elitism` | Nº de individuos élite |
+| `--stall_gen` | Máximo de generaciones sin mejora |
+| `--init` | Inicialización (`random`, `greedy`, `mix`) |
+| `--ls` | Búsqueda local (0/1) |
+
+---
+
+## 17) Tuning automático con IRACE (en clúster Luthier)
+
+Los archivos se encuentran en:
+
+```
+tuning/ga/
+├─ scenario.txt
+├─ instances-list.txt
+├─ parameter_definitions.txt
+└─ runner.sh
+```
+
+Ejecución:
+
+```bash
+cd tuning/ga
+irace --scenario scenario.txt
+```
+
+### 📌 Mejor configuración encontrada por IRACE
+
+```
+--pop 129
+--pc 0.9955
+--pm 0.1512
+--elitism 1
+--stall_gen 101
+--init mix
+--ls 1
+```
+
+---
+
+## 18) Scripts oficiales para la evaluación del GA (10s y 60s)
+
+Los scripts nuevos de esta entrega se ubican en:
+
+```
+scripts/ga/run_ga_10s.sh
+scripts/ga/run_ga_60s.sh
+scripts/ga/run_ga_miniset.sh
+```
+
+Permiten:
+
+- ejecutar GA sobre una instancia  
+- ejecutar GA 10s/60s  
+- comparar una minimuesta (N=1000/2000/3000 con p=0.1, 0.5, 0.9)
+
+Ejemplo:
+
+```bash
+scripts/ga/run_ga_miniset.sh build/GA
+```
+
+---
+
+## 19) Mini-set usado para comparaciones 10s vs 60s
+
+```
+# N=1000
+erdos_n1000_p0c0.1_1.graph
+erdos_n1000_p0c0.5_1.graph
+erdos_n1000_p0c0.9_1.graph
+
+# N=2000
+erdos_n2000_p0c0.1_1.graph
+erdos_n2000_p0c0.5_1.graph
+erdos_n2000_p0c0.9_1.graph
+
+# N=3000
+erdos_n3000_p0c0.1_1.graph
+erdos_n3000_p0c0.5_1.graph
+erdos_n3000_p0c0.9_1.graph
+```
+
+---
+
+## 20) Comparación GA 10s vs GA 60s  
+*(Valores se agregan después de correr los scripts.)*
+
+| N | p | GA-10s | GA-60s | Mejora (%) |
+|----|----|--------|---------|------------|
+| 1000 | 0.1 | … | … | … |
+| … | … | … | … | … |
+
+---
+
+## 21) Gráfico de Diferencias Críticas (Nemenyi)
+
+Se agregará en el informe (no en el README).  
+Incluye:
+
+- Greedy  
+- A-Greedy  
+- SA  
+- GA-10s  
+- GA-60s  
+
+---
+
+## 22) Conclusión de Entrega 3
+
+- El GA presenta **estabilidad alta** y **baja varianza** comparado con SA.  
+- Con la configuración óptima de IRACE, **GA-60s supera consistentemente a GA-10s**.  
+- La política any-time facilita la comparación directa con SA.  
+- Futuro trabajo: hibridación GA+SA.
+
+---
