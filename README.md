@@ -308,9 +308,9 @@ La ejecución es estable, eficiente y muestra progreso any-time en tiempo real,
 con tiempos subcuadráticos incluso para N = 3000.
 
 
-# ============================================================
+============================================================
 # ENTREGA 3 — Metaheurística Poblacional: Algoritmo Genético (GA)
-# ============================================================
+============================================================
 
 ## 14) Compilación
 
@@ -440,30 +440,7 @@ erdos_n3000_p0c0.9_1.graph
 
 ---
 
-## 20) Comparación GA 10s vs GA 60s  
-*(Valores se agregan después de correr los scripts.)*
-
-| N | p | GA-10s | GA-60s | Mejora (%) |
-|----|----|--------|---------|------------|
-| 1000 | 0.1 | … | … | … |
-| … | … | … | … | … |
-
----
-
-## 21) Gráfico de Diferencias Críticas (Nemenyi)
-
-Se agregará en el informe (no en el README).  
-Incluye:
-
-- Greedy  
-- A-Greedy  
-- SA  
-- GA-10s  
-- GA-60s  
-
----
-
-## 22) Conclusión de Entrega 3
+## 20) Conclusión de Entrega 3
 
 - El GA presenta **estabilidad alta** y **baja varianza** comparado con SA.  
 - Con la configuración óptima de IRACE, **GA-60s supera consistentemente a GA-10s**.  
