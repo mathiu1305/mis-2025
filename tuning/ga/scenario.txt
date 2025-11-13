@@ -1,0 +1,20 @@
+# --- Escenario para el GA MIS (portable) ---
+scenarioFile = tuning/ga/scenario.txt
+
+execDir       = .
+targetRunner  = tuning/ga/runner.sh
+parameterFile = tuning/ga/parameter_definitions.txt
+logFile       = tuning/ga/logs/irace.log
+
+# Usamos la mini-muestra de instancias para tuning
+trainInstancesDir  = .
+trainInstancesFile = tuning/ga/instances-list-mini-10s.txt
+
+maxExperiments = 1000
+seed           = 123
+
+# IRACE usa la salida (stdout) del algoritmo como medida de desempeño
+targetType = "max"
+
+# Control de recursos (para Luthier puedes usar 8)
+parallel  = 8

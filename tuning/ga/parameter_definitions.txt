@@ -1,0 +1,7 @@
+population_size   "--pop "         i  (20, 200)
+crossover_rate    "--pc "          r  (0.5, 1.0)
+mutation_rate     "--pm "          r  (0.01, 0.2)
+elitism           "--elitism "     i  (1, 10)
+stall_generations "--stall_gen "   i  (20, 200)
+init_method       "--init "        c  (mix, greedy, random)
+local_search      "--ls "          c  (0, 1)

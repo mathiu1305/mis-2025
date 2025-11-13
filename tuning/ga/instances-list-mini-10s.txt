@@ -1,0 +1,15 @@
+# Mini-muestra de instancias para GA (t=10s)
+# N=1000
+data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.1_1.graph
+data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.5_1.graph
+data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.9_1.graph
+
+# N=2000
+data/dataset_grafos_no_dirigidos/new_2000_dataset/erdos_n2000_p0c0.1_1.graph
+data/dataset_grafos_no_dirigidos/new_2000_dataset/erdos_n2000_p0c0.5_1.graph
+data/dataset_grafos_no_dirigidos/new_2000_dataset/erdos_n2000_p0c0.9_1.graph
+
+# N=3000
+data/dataset_grafos_no_dirigidos/new_3000_dataset/erdos_n3000_p0c0.1_1.graph
+data/dataset_grafos_no_dirigidos/new_3000_dataset/erdos_n3000_p0c0.5_1.graph
+data/dataset_grafos_no_dirigidos/new_3000_dataset/erdos_n3000_p0c0.9_1.graph
