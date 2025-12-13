@@ -448,3 +448,164 @@ erdos_n3000_p0c0.9_1.graph
 - Futuro trabajo: hibridación GA+SA.
 
 ---
+
+============================================================
+# ENTREGA 4 — Hibridación MH_p + MH_t: GA + Búsqueda Local (GA+LS)
+============================================================
+
+Autores: Matías Gayoso, Constanza Obreque  
+Entorno: Ubuntu (WSL2 / Clúster Luthier)  
+Lenguaje: C++17  
+
+------------------------------------------------------------
+## 21) Descripción general
+------------------------------------------------------------
+
+En esta entrega se implementa una **metaheurística híbrida** que combina:
+
+- **MH poblacional (MH_p):** Algoritmo Genético (GA)
+- **MH de trayectoria (MH_t):** Búsqueda Local (Local Search, LS)
+
+La estrategia consiste en ejecutar un GA clásico y aplicar **búsqueda local periódica**
+sobre individuos de la población, logrando un mejor equilibrio entre:
+- exploración global,
+- intensificación local,
+- calidad de soluciones y comportamiento any-time.
+
+El algoritmo final se denomina **GA+LS**.
+
+------------------------------------------------------------
+## 22) Compilación del solver final
+------------------------------------------------------------
+
+Desde la raíz del proyecto:
+
+```bash
+make solver_MISP
+```
+
+Compilación manual (alternativa):
+
+```bash
+g++ -O3 -std=c++17 src/final/solver_MISP.cpp -o build/solver_MISP
+```
+
+------------------------------------------------------------
+## 23) Ejecución básica (Any-Time)
+------------------------------------------------------------
+
+```bash
+./build/solver_MISP -i <instancia.graph> -t <segundos>
+```
+
+Ejemplo:
+
+```bash
+./build/solver_MISP \
+  -i data/dataset_grafos_no_dirigidos/new_1000_dataset/erdos_n1000_p0c0.05_1.graph \
+  -t 5
+```
+
+Salida:
+
+```
+<mejor_tamaño> <tiempo_desde_inicio>
+```
+
+------------------------------------------------------------
+## 24) Parámetros del GA+LS
+------------------------------------------------------------
+
+| Parámetro | Descripción |
+|---------|------------|
+| `--pop` | Tamaño de población |
+| `--ls_budget` | Presupuesto de búsqueda local |
+| `--ls_freq` | Frecuencia de aplicación de LS |
+| `-t` | Tiempo límite (segundos) |
+
+------------------------------------------------------------
+## 25) Tuning automático con IRACE
+------------------------------------------------------------
+
+Archivos utilizados:
+
+```
+tuning/final/
+├─ scenario.txt
+├─ parameter_definitions.txt
+├─ runner.sh
+└─ logs/irace.log
+```
+
+Ejecución:
+
+```bash
+irace --scenario tuning/final/scenario.txt
+```
+
+### Mejor configuración encontrada
+
+```
+--pop 79
+--ls_budget 444
+--ls_freq 5
+```
+
+------------------------------------------------------------
+## 26) Evaluación experimental
+------------------------------------------------------------
+
+- Dataset total: **1710 instancias**
+- Tamaños: N = 1000, 2000, 3000
+- Probabilidades: p ∈ {0.1, 0.2, …, 0.9}
+
+Ejecución masiva:
+
+```bash
+nohup scripts/run_ga_ls_final.sh > results/final_ga_ls/run.log 2>&1 &
+```
+
+Resultados:
+
+```
+results/final_ga_ls/ga_ls_final.csv
+```
+
+------------------------------------------------------------
+## 27) Agregación de resultados
+------------------------------------------------------------
+
+```bash
+python3 scripts/aggregate_ga_ls.py
+```
+
+Archivo generado:
+
+```
+ga_ls_aggregated.csv
+```
+
+------------------------------------------------------------
+## 28) Resultados y comparación
+------------------------------------------------------------
+
+El algoritmo **GA+LS** supera consistentemente a:
+
+- Greedy
+- A-Greedy
+- Simulated Annealing
+- GA puro
+
+en calidad de solución, manteniendo tiempos competitivos.
+
+Resultados completos:
+- `ga_ls_aggregated.csv`
+- `final_comparative_results.csv`
+
+------------------------------------------------------------
+## 29) Conclusiones
+------------------------------------------------------------
+
+- La hibridación MH_p + MH_t entrega mejoras sustanciales.
+- IRACE permite una calibración robusta de parámetros.
+- GA+LS es la mejor solución final del proyecto.

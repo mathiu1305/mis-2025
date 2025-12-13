@@ -1,0 +1,10 @@
+scenarioFile = "/home/shared/sisadapt6/mis-2025/tuning/final/scenario.txt"
+execDir = "/home/shared/sisadapt6/mis-2025"
+targetRunner = "/home/shared/sisadapt6/mis-2025/tuning/final/runner.sh"
+parameterFile = "/home/shared/sisadapt6/mis-2025/tuning/final/parameter_definitions.txt"
+logFile = "/home/shared/sisadapt6/mis-2025/tuning/final/logs/irace.log"
+
+trainInstancesDir = "."
+trainInstancesFile = "/home/shared/sisadapt6/mis-2025/tuning/ga/instances-list.txt"
+
+maxExperiments = 1000

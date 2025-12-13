@@ -74,3 +74,5 @@ help:
 	@echo "  make release      → Limpia y compila con -O3 -DNDEBUG"
 	@echo "  make clean        → Elimina los binarios generados"
 	@echo "  make help         → Muestra esta ayuda"
+solver_MISP:
+	g++ -O3 -std=c++17 src/final/solver_MISP.cpp -o build/solver_MISP
